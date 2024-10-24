@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>소셜 로그인 인증 중...</title>
+  <style>
+    /* 전체 레이아웃 스타일 */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f5f5f5;
+      font-family: 'Arial', sans-serif;
+      color: #333;
+    }
+
+    /* 카드 스타일 */
+    .container {
+      text-align: center;
+      background: #ffffff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    /* 제목 스타일 */
+    .title {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    /* 설명 텍스트 스타일 */
+    .description {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    /* 로딩 애니메이션 */
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-top: 4px solid #4CAF50;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  <script type="text/javascript">
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+
+      const authUrl = urlParams.get('authUrl');
+      let returnUrl = urlParams.get('returnUrl');
+      const code = urlParams.get('code');
+      const state = urlParams.get('state');
+
+      if (code && state) {
+        // 다시 플랫폼 엔드포인트 -> 리디랙션 받는 부분
+        const parsedState = JSON.parse(decodeURIComponent(state));
+        returnUrl = parsedState.returnUrl;
+
+        const redirectUrl = `${returnUrl}?code=${code}&state=${parsedState.originalState}`;
+        window.location.replace(redirectUrl);
+      } else if (authUrl && returnUrl) {
+        // 초기 호출 -> 플랫폼 엔드포인트 부분
+        const originalState = urlParams.get('state') || '';
+        // returnUrl을 브라우저에 캐싱하지 않고 검증절차에 주고받기
+        const newState = encodeURIComponent(JSON.stringify({ returnUrl, originalState }));
+
+        const authUrlObj = new URL(authUrl);
+        // 기존 state가 있으면 덮어쓰고 없으면 새로 추가
+        authUrlObj.searchParams.set('state', newState); 
+
+        const redirectToAuthUrl = authUrlObj.toString();
+        window.location.replace(redirectToAuthUrl);
+      } else {
+        // 콘솔에 에러 로그를 출력하고, 설명 문구를 변경
+        console.error('Missing parameters. authUrl and returnUrl are required.');
+        const descriptionElement = document.querySelector('.description');
+        descriptionElement.textContent = "로그인에 실패했습니다. 브라우저를 닫고 다시 시도해 보세요!";
+      }
+    };
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="spinner"></div>
+    <h1 class="title">소셜 로그인</h1>
+    <p class="description">로그인 화면으로 이동 중입니다. 잠시만 기다려주세요...</p>
+  </div>
+</body>
+</html>
