@@ -65,7 +65,7 @@
       const authUrl = urlParams.get('authUrl') || "";
       const returnUrl = urlParams.get('returnUrl') || "";
       const code = urlParams.get('code') || "";
-      const state = urlParams.get('state') || "";
+      const state = urlParams.get('state') || "state";
   
       const onError = () => {
         // 설명 문구를 변경
@@ -78,7 +78,7 @@
         // 초기 호출 -> 플랫폼 인가코드 요청 엔드포인트 부분
         const originalState = state
         // returnUrl을 브라우저에 캐싱하지 않고 검증절차에 주고받기
-        const newState = JSON.stringify({ returnUrl, originalState });
+        const newState = encodeURIComponent(JSON.stringify({ returnUrl, originalState }));
 
         const authUrlObj = new URL(authUrl);
         // 기존 state가 있으면 덮어쓰고 없으면 새로 추가
@@ -88,7 +88,7 @@
         window.location.replace(redirectToAuthUrl);
       } else if (code && state) {
         // 다시 플랫폼 엔드포인트 -> 리디랙션 받는 부분
-        const parsedState = JSON.parse(state);
+        const parsedState = JSON.parse(decodeURIComponent(state));
         const returnUrl = parsedState.returnUrl;
         const originalState = parsedState.originalState
         
