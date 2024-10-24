@@ -47,7 +47,7 @@
       width: 40px;
       height: 40px;
       border: 4px solid rgba(0, 0, 0, 0.1);
-      border-top: 4px solid #4CAF50;
+      border-top: 4px solid #2A61FA;
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin: 0 auto 20px;
@@ -67,14 +67,7 @@
       const code = urlParams.get('code');
       const state = urlParams.get('state');
 
-      if (code && state) {
-        // 다시 플랫폼 엔드포인트 -> 리디랙션 받는 부분
-        const parsedState = JSON.parse(decodeURIComponent(state));
-        returnUrl = parsedState.returnUrl;
-
-        const redirectUrl = `${returnUrl}?code=${code}&state=${parsedState.originalState}`;
-        window.location.replace(redirectUrl);
-      } else if (authUrl && returnUrl) {
+      if (authUrl && returnUrl) {
         // 초기 호출 -> 플랫폼 엔드포인트 부분
         const originalState = urlParams.get('state') || '';
         // returnUrl을 브라우저에 캐싱하지 않고 검증절차에 주고받기
@@ -86,11 +79,18 @@
 
         const redirectToAuthUrl = authUrlObj.toString();
         window.location.replace(redirectToAuthUrl);
+      } else if (code && state) {
+        // 다시 플랫폼 엔드포인트 -> 리디랙션 받는 부분
+        const parsedState = JSON.parse(decodeURIComponent(state));
+        returnUrl = parsedState.returnUrl;
+
+        const redirectUrl = `${returnUrl}?code=${code}&state=${parsedState.originalState}`;
+        window.location.replace(redirectUrl);
       } else {
         // 콘솔에 에러 로그를 출력하고, 설명 문구를 변경
         console.error('Missing parameters. authUrl and returnUrl are required.');
         const descriptionElement = document.querySelector('.description');
-        descriptionElement.textContent = "로그인에 실패했습니다. 브라우저를 닫고 다시 시도해 보세요!";
+        descriptionElement.textContent = "연결에 실패했습니다. 브라우저를 닫고 다시 시도해 보세요!";
       }
     };
   </script>
@@ -98,7 +98,7 @@
 <body>
   <div class="container">
     <div class="spinner"></div>
-    <h1 class="title">소셜 로그인</h1>
+    <h1 class="title">간편 로그인</h1>
     <p class="description">로그인 화면으로 이동 중입니다. 잠시만 기다려주세요...</p>
   </div>
 </body>
