@@ -24,7 +24,7 @@
       background: #ffffff;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       padding: 30px;
-      border-radius: 12px;
+      border-radius: 15px;
       width: 90%;
       max-width: 600px;
     }
@@ -32,14 +32,14 @@
     /* 제목 스타일 */
     .title {
       font-size: 2.5rem;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
 
     /* 설명 텍스트 스타일 */
     .description {
       font-size: 1.5rem;
       color: #666;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
     /* 로딩 애니메이션 */
@@ -50,7 +50,7 @@
       border-top: 5px solid #2A61FA;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
+      margin: 0 auto 30px;
     }
 
     @keyframes spin {
@@ -89,14 +89,14 @@
         window.location.replace(redirectToAuthUrl);
       } else if (redirectedCode && redirectedState) {
         // 다시 플랫폼 엔드포인트 -> 리디랙션 받는 부분
-        const parsedState = JSON.parse(decodeURIComponent(state));
+        const parsedState = JSON.parse(decodeURIComponent(redirectedState));
         const returnUrl = parsedState.returnUrl;
         const originalState = parsedState.originalState
         
         if (!returnUrl) onError()
 
-        const redirectUrl = `${returnUrl}?code=${code}&state=${originalState}`;
-        window.location.replace(redirectUrl);
+        const redirectToAppUrl = `${returnUrl}?code=${redirectedCode}&state=${originalState}`;
+        window.location.replace(redirectToAppUrl);
       }
     };
   </script>
