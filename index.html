@@ -31,23 +31,23 @@
 
     /* 제목 스타일 */
     .title {
-      font-size: 1.5rem;
+      font-size: 2.5rem;
       margin-bottom: 10px;
     }
 
     /* 설명 텍스트 스타일 */
     .description {
-      font-size: 1rem;
+      font-size: 1.5rem;
       color: #666;
       margin-bottom: 20px;
     }
 
     /* 로딩 애니메이션 */
     .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      border-top: 4px solid #2A61FA;
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(0, 0, 0, 0.1);
+      border-top: 5px solid #2A61FA;
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin: 0 auto 20px;
@@ -87,7 +87,7 @@
 
         const redirectToAuthUrl = authUrlObj.toString();
         window.location.replace(redirectToAuthUrl);
-      } else if (code && state) {
+      } else if (redirectedCode && redirectedState) {
         // 다시 플랫폼 엔드포인트 -> 리디랙션 받는 부분
         const parsedState = JSON.parse(decodeURIComponent(state));
         const returnUrl = parsedState.returnUrl;
