@@ -23,10 +23,10 @@
       text-align: center;
       background: #ffffff;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      padding: 30px;
+      padding: 40px 30px;
       border-radius: 15px;
       width: 90%;
-      max-width: 700px;
+      max-width: 800px;
     }
 
     /* 제목 스타일 */
@@ -37,7 +37,7 @@
 
     /* 설명 텍스트 스타일 */
     .description {
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: #666;
       margin-bottom: 30px;
     }
@@ -70,7 +70,9 @@
   
       const onError = () => {
         // 설명 문구를 변경
+        const titleElement = document.querySelector('.title');
         const descriptionElement = document.querySelector('.description');
+        titleElement.textContent = "플랫폼 연결 실패";
         descriptionElement.textContent = "연결에 실패했습니다. 브라우저를 닫고 다시 시도해 보세요!";
         return
       }
@@ -104,7 +106,7 @@
 <body>
   <div class="container">
     <div class="spinner"></div>
-    <h1 class="title">간편 로그인</h1>
+    <h1 class="title">플랫폼 연결 중</h1>
     <p class="description">로그인 화면으로 이동 중입니다. 잠시만 기다려주세요...</p>
   </div>
 </body>
