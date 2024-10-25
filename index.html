@@ -62,11 +62,11 @@
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
 
-      const authUrl = urlParams.get('authUrl') || "";
-      const returnUrl = urlParams.get('returnUrl') || "";
+      const authUrl = urlParams.get('authUrl') || null;
+      const returnUrl = urlParams.get('returnUrl') || null;
       
-      const redirectedCode = urlParams.get('code') || "";
-      const redirectedState = urlParams.get('state') || "state";
+      const redirectedCode = urlParams.get('code') || null;
+      const redirectedState = urlParams.get('state') || null;
   
       const onError = () => {
         // 설명 문구를 변경
@@ -80,7 +80,7 @@
       if (authUrl && returnUrl && !redirectedCode) {
         // 초기 호출 -> 플랫폼 인가코드 요청 엔드포인트 부분
         const authUrlObj = new URL(authUrl);
-        const originalState = authUrlObj.searchParams.get('state') || "state";
+        const originalState = authUrlObj.searchParams.get('state') || "defaultState";
         // returnUrl을 브라우저에 캐싱하지 않고 검증절차에 주고받기
         const newState = encodeURIComponent(JSON.stringify({ returnUrl, originalState }));
         
@@ -89,15 +89,19 @@
 
         const redirectToAuthUrl = authUrlObj.toString();
         window.location.replace(redirectToAuthUrl);
-      } else if (redirectedCode && redirectedState) {
+      } else if (redirectedCode) {
         // 다시 플랫폼 엔드포인트 -> 리디랙션 받는 부분
+        if (!redirectedState) onError()
         const parsedState = JSON.parse(decodeURIComponent(redirectedState));
-        const returnUrl = parsedState.returnUrl;
-        const originalState = parsedState.originalState
-        
-        if (!returnUrl) onError()
-
-        const redirectToAppUrl = `${returnUrl}?code=${redirectedCode}&state=${originalState}`;
+        const returnUrl = parsedState?.returnUrl || null;        
+        const originalState = parsedState?.originalState || null;
+        if (!returnUrl || !originalState) onError();
+        let redirectToAppUrl = ""
+        if (originalState === "defaultState") {
+          redirectToAppUrl = `${returnUrl}?code=${redirectedCode}`;
+        } else {
+          redirectToAppUrl = `${returnUrl}?code=${redirectedCode}&state=${originalState}`;
+        }
         window.location.replace(redirectToAppUrl);
       }
     };
